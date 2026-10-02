@@ -1,5 +1,18 @@
 # ASRP in ISEE
 
+ISEE is the operating framework documented at
+[agentile.org](https://agentile.org).
+
+## Install
+
+```bash
+copilot plugin marketplace add suuus/isee-plugins
+copilot plugin install isee-suite@isee
+```
+
+This loads the complete ADRP → ASRP → Execution → AERP workflow. Install only
+ASRP with `copilot plugin install asrp@isee`.
+
 ## Regular Copilot
 
 Compile active Structure:

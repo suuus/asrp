@@ -5,6 +5,9 @@
 **ASRP** binds ratified Intent to architecture, ownership, boundaries, policy,
 controls, agents, workflows, execution entry points, and required Evidence.
 
+Learn more about the ISEE operating framework at
+[agentile.org](https://agentile.org).
+
 ```text
 Intent → Structure → Execution → Evidence
  ADRP       ASRP                       AERP
@@ -15,7 +18,25 @@ ASRP is a binding profile, not a replacement for C4, ArchiMate, ISO/IEC/IEEE
 DMN, OSCAL, or GitHub workflows. It fingerprints and connects those artifacts
 so an execution system can consume a small, explicit contract.
 
-## Install
+## Install with GitHub Copilot
+
+Install the complete [ISEE plugin suite](https://github.com/suuus/isee-plugins):
+
+```bash
+copilot plugin marketplace add suuus/isee-plugins
+copilot plugin install isee-suite@isee
+```
+
+To load only the ASRP agent and skills:
+
+```bash
+copilot plugin install asrp@isee
+```
+
+Use the suite's `isee-setup` skill to install or diagnose the deterministic
+CLIs explicitly.
+
+## Install the CLI from a checkout
 
 ```bash
 python3 -m venv .venv
