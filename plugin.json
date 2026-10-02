@@ -1,0 +1,15 @@
+{
+  "name": "asrp",
+  "description": "Record and compile the Structure layer of ISEE, bound to exact ADRP Intent.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Suzanne Daniels",
+    "url": "https://github.com/suuus/asrp"
+  },
+  "homepage": "https://github.com/suuus/asrp",
+  "repository": "https://github.com/suuus/asrp",
+  "license": "MIT",
+  "keywords": ["agents", "architecture", "governance", "isee", "structure"],
+  "agents": ".github/agents/",
+  "skills": ".github/skills/"
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": "ape-structure-record/v1",
+  "structure_id": "STR-PRODUCTION-DEPLOYMENT",
+  "record_id": "5a55e292-2650-460d-901d-fc38af809e21",
+  "record_version": 1,
+  "status": "effective",
+  "title": "Production deployment structure",
+  "description": "The components, ownership, blocking security gate, entry point, and evidence obligation for production deployment.",
+  "scope": ["production deployments"],
+  "intent_bindings": [],
+  "actors": [
+    {
+      "actor_id": "platform-team",
+      "actor_type": "team",
+      "name": "Platform Engineering",
+      "uri": null
+    }
+  ],
+  "elements": [
+    {
+      "element_id": "git-ape",
+      "element_type": "agent",
+      "name": "Git-Ape",
+      "description": "Executes the governed Azure deployment workflow.",
+      "owner_refs": ["platform-team"],
+      "artifact_refs": [],
+      "depends_on": ["security-gate"],
+      "properties": {
+        "execution_system": "git-ape"
+      }
+    },
+    {
+      "element_id": "security-gate",
+      "element_type": "control-gate",
+      "name": "Blocking security gate",
+      "description": "Prevents deployment while blocking security findings remain.",
+      "owner_refs": ["platform-team"],
+      "artifact_refs": [],
+      "depends_on": [],
+      "properties": {
+        "severity_threshold": "high"
+      }
+    }
+  ],
+  "gates": [
+    {
+      "gate_id": "security-gate",
+      "name": "Security gate",
+      "mode": "blocking",
+      "element_refs": ["security-gate"],
+      "policy_refs": []
+    }
+  ],
+  "entry_points": [
+    {
+      "entry_point_id": "production-deployment",
+      "name": "Production deployment",
+      "runner": "git-ape",
+      "command": null,
+      "element_refs": ["git-ape"],
+      "required_gates": ["security-gate"]
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "requirement_id": "SECURITY-GATE-RESULT",
+      "evidence_type": "assessment",
+      "subject": "security-gate",
+      "required_results": ["passed"],
+      "artifact_roles": ["report"],
+      "criteria_refs": ["SECURITY-GATE-01"],
+      "gate_refs": ["security-gate"]
+    }
+  ],
+  "artifacts": [],
+  "relationships": {
+    "depends_on": [],
+    "supersedes": []
+  },
+  "lifecycle": {
+    "effective_from": "2026-10-02T12:00:00Z",
+    "review_by": "2027-04-02T12:00:00Z",
+    "expires_at": null,
+    "drift_triggers": [
+      "The security gate is bypassed",
+      "The Git-Ape execution entry point changes"
+    ]
+  },
+  "integrity": {
+    "record_fingerprint": null
+  }
+}

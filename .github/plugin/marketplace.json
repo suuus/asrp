@@ -1,0 +1,15 @@
+{
+  "name": "asrp",
+  "metadata": {
+    "description": "The deterministic ASRP Structure record layer for the ISEE Framework.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "asrp",
+      "description": "Bind architecture and execution Structure to exact ADRP Intent.",
+      "version": "0.1.0",
+      "source": "."
+    }
+  ]
+}

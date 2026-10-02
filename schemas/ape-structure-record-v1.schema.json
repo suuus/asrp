@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://asrp.dev/schema/ape-structure-record-v1.schema.json",
+  "title": "Ape Structure Record Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "structure_id", "record_id", "record_version", "status",
+    "title", "description", "scope", "intent_bindings", "actors", "elements",
+    "gates", "entry_points", "evidence_requirements", "artifacts",
+    "relationships", "lifecycle", "integrity"
+  ],
+  "properties": {
+    "schema_version": { "const": "ape-structure-record/v1" },
+    "structure_id": { "type": "string", "pattern": "^STR-[A-Z0-9][A-Z0-9-]{1,62}$" },
+    "record_id": { "type": "string", "format": "uuid" },
+    "record_version": { "type": "integer", "minimum": 1 },
+    "status": { "enum": ["draft", "effective", "deprecated", "superseded", "revoked"] },
+    "title": { "$ref": "#/$defs/text" },
+    "description": { "$ref": "#/$defs/text" },
+    "scope": { "$ref": "#/$defs/textArray" },
+    "intent_bindings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/intentBinding" }
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["actor_id", "actor_type", "name", "uri"],
+        "properties": {
+          "actor_id": { "$ref": "#/$defs/text" },
+          "actor_type": { "enum": ["person", "team", "organisation", "agent", "system"] },
+          "name": { "$ref": "#/$defs/text" },
+          "uri": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/text" }] }
+        }
+      }
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "element_id", "element_type", "name", "description", "owner_refs",
+          "artifact_refs", "depends_on", "properties"
+        ],
+        "properties": {
+          "element_id": { "$ref": "#/$defs/text" },
+          "element_type": {
+            "enum": [
+              "component", "agent", "responsibility", "interface", "dependency",
+              "control-gate", "workflow", "execution-entry-point",
+              "evidence-obligation", "boundary"
+            ]
+          },
+          "name": { "$ref": "#/$defs/text" },
+          "description": { "$ref": "#/$defs/text" },
+          "owner_refs": { "$ref": "#/$defs/textArray" },
+          "artifact_refs": { "$ref": "#/$defs/textArray" },
+          "depends_on": { "$ref": "#/$defs/textArray" },
+          "properties": { "type": "object" }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "name", "mode", "element_refs", "policy_refs"],
+        "properties": {
+          "gate_id": { "$ref": "#/$defs/text" },
+          "name": { "$ref": "#/$defs/text" },
+          "mode": { "enum": ["blocking", "advisory"] },
+          "element_refs": { "$ref": "#/$defs/textArray" },
+          "policy_refs": { "$ref": "#/$defs/textArray" }
+        }
+      }
+    },
+    "entry_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entry_point_id", "name", "runner", "command", "element_refs", "required_gates"],
+        "properties": {
+          "entry_point_id": { "$ref": "#/$defs/text" },
+          "name": { "$ref": "#/$defs/text" },
+          "runner": { "$ref": "#/$defs/text" },
+          "command": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/text" }] },
+          "element_refs": { "$ref": "#/$defs/textArray" },
+          "required_gates": { "$ref": "#/$defs/textArray" }
+        }
+      }
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirement_id", "evidence_type", "subject", "required_results",
+          "artifact_roles", "criteria_refs", "gate_refs"
+        ],
+        "properties": {
+          "requirement_id": { "$ref": "#/$defs/text" },
+          "evidence_type": {
+            "enum": ["observation", "assessment", "approval", "execution", "outcome", "drift"]
+          },
+          "subject": { "$ref": "#/$defs/text" },
+          "required_results": { "$ref": "#/$defs/textArray" },
+          "artifact_roles": { "$ref": "#/$defs/textArray" },
+          "criteria_refs": { "$ref": "#/$defs/textArray" },
+          "gate_refs": { "$ref": "#/$defs/textArray" }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "path", "media_type", "digest", "role"],
+        "properties": {
+          "name": { "$ref": "#/$defs/text" },
+          "path": { "$ref": "#/$defs/text" },
+          "media_type": { "$ref": "#/$defs/text" },
+          "digest": { "$ref": "#/$defs/digest" },
+          "role": {
+            "enum": [
+              "architecture", "policy", "control", "workflow", "agent",
+              "interface", "ownership", "implementation", "supporting"
+            ]
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["depends_on", "supersedes"],
+      "properties": {
+        "depends_on": { "$ref": "#/$defs/textArray" },
+        "supersedes": { "$ref": "#/$defs/textArray" }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effective_from", "review_by", "expires_at", "drift_triggers"],
+      "properties": {
+        "effective_from": { "$ref": "#/$defs/nullableTimestamp" },
+        "review_by": { "$ref": "#/$defs/nullableTimestamp" },
+        "expires_at": { "$ref": "#/$defs/nullableTimestamp" },
+        "drift_triggers": { "$ref": "#/$defs/textArray" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_fingerprint"],
+      "properties": {
+        "record_fingerprint": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/digest" }]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1 },
+    "textArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/text" }
+    },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "nullableTimestamp": {
+      "oneOf": [{ "type": "null" }, { "type": "string", "format": "date-time" }]
+    },
+    "intentBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "record_id", "record_version", "record_fingerprint"],
+      "properties": {
+        "decision_id": { "type": "string", "pattern": "^[A-Z][A-Z0-9-]{2,63}$" },
+        "record_id": { "type": "string", "format": "uuid" },
+        "record_version": { "type": "integer", "minimum": 1 },
+        "record_fingerprint": { "$ref": "#/$defs/digest" }
+      }
+    }
+  }
+}
